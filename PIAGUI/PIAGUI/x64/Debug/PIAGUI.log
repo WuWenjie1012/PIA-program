@@ -1,6 +1,13 @@
-﻿  myopenglwindow.cpp
+﻿  Curve.cpp
+  main.cpp
+  Mathematic.cpp
+  myopenglwindow.cpp
+  Bspline.cpp
+  PIAGUI.cpp
+d:\mygit\piagui\piagui\mathematic.h(39): warning C4700: 使用了未初始化的局部变量“pt”
   qrc_PIAGUI.cpp
+  moc_PIAGUI.cpp
   qrc_PIAGUI.cpp
 x64\Debug\/.\GeneratedFiles\/qrc_PIAGUI.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
-  PIAGUI.vcxproj -> c:\Users\asusb250-tla\documents\visual studio 2015\Projects\PIAGUI\x64\Debug\PIAGUI.exe
-  PIAGUI.vcxproj -> c:\Users\asusb250-tla\documents\visual studio 2015\Projects\PIAGUI\x64\Debug\PIAGUI.pdb (Full PDB)
+  PIAGUI.vcxproj -> D:\myGit\PIAGUI\x64\Debug\PIAGUI.exe
+  PIAGUI.vcxproj -> D:\myGit\PIAGUI\x64\Debug\PIAGUI.pdb (Full PDB)

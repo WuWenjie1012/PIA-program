@@ -46,6 +46,7 @@ public:
 	void CalculateDataParameter();	// Calculate the data parameters
 	void CalculateCtlSequence();	// Calculate the contrl points sequence
 	void CalculateCurvePoints();	// Calculate the points on the curve
+	void CalculateDataPointsOnCurve();
 
 	void Normalize();				// Normalize the data point to (-1, -1) - (1, 1)
 
@@ -55,9 +56,11 @@ public:
 	void CalculatePresentError();
 	void CalculateDifferenceVector();
 
+	void OnePIAIterateStep();
 private:
 	vector<Cpoint> CtlPoints;	// Control points for curve
-	vector<Cpoint> DataPoints;	// The data points;
+	vector<Cpoint> DataPoints;	// The data points
+	vector<Cpoint> DataPointsOnCurve;	// [t0, t1, t2, ... , tn] on curve
 	vector<double> KnotVector;	// Knot vector for curve
 	vector<double> DataParameters;	// The data parameter
 	vector<int> CtlSequence;	// The contrl points sequence

@@ -19,7 +19,8 @@ PIAGUI::PIAGUI(QWidget *parent)
 	connect(ui.DataPoints, SIGNAL(clicked()), this, SLOT(DisplayDataPoints()));	// Display option
 	connect(ui.CtlPoly, SIGNAL(clicked()), this, SLOT(DisplayCtlPoly()));	// Display option
 	connect(ui.BsplineCurve, SIGNAL(clicked()), this, SLOT(DisplayBsplineCurve()));	// Display option
-	
+	connect(ui.OneStepIterate, SIGNAL(clicked()), this, SLOT(OneStepIterate()));	// Display option
+	connect(ui.PIAButton, SIGNAL(clicked()), this, SLOT(m_PIAButton()));	// Display option
 	/*if (ui.CtlPoints->checkState() == Qt::Checked)
 		CtlPointOpen = true;
 	else
@@ -36,6 +37,7 @@ void PIAGUI::loadDataFromFile()
 		mCurve = NULL;
 		mCurve = new Curve;
 		mCurve->loadDataFromFile(FilePathName);
+		ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 	}	
 }	
 
@@ -45,6 +47,7 @@ void PIAGUI::dataGcur()
 	mCurve = NULL;
 	mCurve = new Curve;
 	mCurve->loadDataFromFile(FilePathName);
+	ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 }
 
 void PIAGUI::DisplayCtlPoints()
@@ -85,12 +88,17 @@ void PIAGUI::OneStepIterate()
 	{
 	case PIAGUI::PIA:
 		TargetError = ui.TargetError->text().toDouble();
-		PresentError = mCurve->GetPresentError();
-		
+		mCurve->OnePIAIterateStep();
+		ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 		break;
 	case PIAGUI::LSPIA:
 		break;
 	default:
 		break;
 	}
+}
+
+void PIAGUI::m_PIAButton()
+{
+	IteType = PIA;
 }

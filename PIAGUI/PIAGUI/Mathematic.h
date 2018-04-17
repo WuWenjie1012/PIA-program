@@ -15,22 +15,32 @@ public:
 
 	Cpoint(const Cpoint& p) :x(p.x), y(p.y), z(p.z)//拷贝构造函数 
 	{}
-	const Cpoint operator*(double a)//数乘
+	const Cpoint& operator*(double a)//数乘
 	{
-		this->x = this->x*a;
-		this->y = this->y*a;
-		this->z = this->z*a;
-		return *this;
-
+		Cpoint *pt;
+		pt->x = this->x * a;
+		pt->y = this->y * a;
+		pt->z = this->z * a;
+		return *pt;
 	}
 
 
 	const Cpoint& operator-(const Cpoint& p)//减法函数
 	{
-		this->x -= p.x;
-		this->y -= p.y;
-		this->z -= p.z;
-		return *this;
+		Cpoint pt;
+		pt.x = this->x - p.x;
+		pt.y = this->y - p.y;
+		pt.z = this->z - p.z;
+		return pt;
+	}
+
+	const Cpoint& operator+(const Cpoint& p)//减法函数
+	{
+		Cpoint pt;
+		pt.x = this->x + p.x;
+		pt.y = this->y + p.y;
+		pt.z = this->z + p.z;
+		return pt;
 	}
 
 	const Cpoint& operator=(const Cpoint& p)//赋值函数

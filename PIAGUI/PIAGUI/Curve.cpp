@@ -77,7 +77,10 @@ void Curve::loadDataFromFile(QString FileName)
 	Mid = (Max + Min) / 2;
 	Normalize();
 
+	DataNum = DataPoints.size() - 1;
 	CalculateDataParameter();
+	DifferenceVector.resize(DataNum + 1);
+//	cout << DifferenceVector.size() << endl;
 	cout << "The data num: " << DataPoints.size() << endl;
 	cout << "The data para num: " << GetDataParameter().size() << endl;
 
@@ -98,6 +101,8 @@ void Curve::loadDataFromFile(QString FileName)
 	cout << "The number of points on curve is: ";
 	cout << PointsOnCurve.size() << endl;
 
+	DataPointsOnCurve.resize(DataNum + 1);
+	CalculateDataPointsOnCurve();
 	CalculateDifferenceVector();
 	CalculatePresentError();
 }
@@ -122,8 +127,16 @@ void Curve::CalculateCurvePoints()
 		pt = CalculateOnePoint(u);
 		PointsOnCurve.push_back(pt);
 	}
-
 }
+
+void Curve::CalculateDataPointsOnCurve()
+{
+	for (int i = 0; i < DataPoints.size(); i++)
+	{
+		DataPointsOnCurve[i] = CalculateOnePoint(DataParameters[i]);
+	}
+}
+
 Cpoint Curve::CalculateOnePoint(double u)
 {
 	int span = FindSpan(CtlNum, Degree, u, KnotVector);
@@ -217,13 +230,9 @@ void Curve::CalculateKnotVector()
 
 void Curve::CalculateDifferenceVector()
 {
-	Cpoint pt;
-	double u;
 	for (int i = 0; i < DataPoints.size(); i++)
 	{
-		u = DataParameters[i];
-		pt = DataPoints[i] - CalculateOnePoint(u);
-		DifferenceVector.push_back(pt);
+		DifferenceVector[i] = DataPoints[i] - DataPointsOnCurve[i];
 	}
 }
 
@@ -234,9 +243,20 @@ void Curve::CalculatePresentError()
 	for (int i = 0; i < DifferenceVector.size(); i++)
 	{
 		pt = DifferenceVector[i].x * DifferenceVector[i].x + DifferenceVector[i].y * DifferenceVector[i].y + DifferenceVector[i].z * DifferenceVector[i].z;
-		pt = sqrt(pt);
 		max = pt > max ? pt : max;
 	}
-
+	max = sqrt(max);
 	PresentError = max;
+}
+
+void Curve::OnePIAIterateStep()
+{
+	for (int i = 0; i < CtlPoints.size(); i++)
+	{
+		CtlPoints[i] = CtlPoints[i] + DifferenceVector[i];
+	}
+
+	CalculateDataPointsOnCurve();
+	CalculateDifferenceVector();
+	CalculatePresentError();
 }
