@@ -1,0 +1,6 @@
+﻿  myopenglwindow.cpp
+  qrc_PIAGUI.cpp
+  qrc_PIAGUI.cpp
+x64\Debug\/.\GeneratedFiles\/qrc_PIAGUI.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
+  PIAGUI.vcxproj -> c:\Users\asusb250-tla\documents\visual studio 2015\Projects\PIAGUI\x64\Debug\PIAGUI.exe
+  PIAGUI.vcxproj -> c:\Users\asusb250-tla\documents\visual studio 2015\Projects\PIAGUI\x64\Debug\PIAGUI.pdb (Full PDB)
