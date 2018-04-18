@@ -5,6 +5,7 @@ extern bool CtlPointOpen;
 extern bool DataPointOpen;
 extern bool CtlPolyOpen;
 extern bool BsplineCurveOpen;
+extern int Method;
 
 PIAGUI::PIAGUI(QWidget *parent)
 	: QMainWindow(parent)
@@ -29,15 +30,20 @@ PIAGUI::PIAGUI(QWidget *parent)
 
 void PIAGUI::loadDataFromFile()
 {
+	
 	FilePathName = QFileDialog::getOpenFileName(this, QStringLiteral("´ò¿ª"),
 		"./Data",
 		QStringLiteral("dat file(*.dat);;txt file(*.txt);;cur file(*.cur)"));
 	if (FilePathName != NULL)
 	{
+		
 		mCurve = NULL;
 		mCurve = new Curve;
+		mCurve->SetPosNum(ui.PosNum->text().toInt());
 		mCurve->loadDataFromFile(FilePathName);
 		ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
+		ui.DataNum->setText(QString::number(mCurve->GetDataNum() + 1));
+		ui.CtlNum->setText(QString::number(mCurve->GetCtlNum() + 1));
 	}	
 }	
 
@@ -101,4 +107,6 @@ void PIAGUI::OneStepIterate()
 void PIAGUI::m_PIAButton()
 {
 	IteType = PIA;
+//	cout << IteType << endl;
+	Method = 0;
 }

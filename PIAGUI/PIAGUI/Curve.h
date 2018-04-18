@@ -2,7 +2,8 @@
 #include "Bspline.h"
 #include <Eigen\Core>
 #include <QtWidgets/QMainWindow>
-using namespace Eigen;
+//using namespace Eigen;
+//typedef Eigen::Vector3d cpoint;
 
 class Curve :public Bspline
 {
@@ -10,7 +11,7 @@ public:
 	Curve();
 	//Curve(QString filename);
 	~Curve() {};
-
+	
 	//Cpoint CalculateOnePoint(double u)  override;	//Calculate one point on the curve
 	//void renderScene() override;
 	vector<double> GetKnotVector() { return KnotVector; }
@@ -64,7 +65,7 @@ private:
 	vector<double> KnotVector;	// Knot vector for curve
 	vector<double> DataParameters;	// The data parameter
 	vector<int> CtlSequence;	// The contrl points sequence
-	vector<Cpoint> DifferenceVector;	// The difference vector
+	vector<Eigen::Vector3d> DifferenceVector;	// The difference vector
 	vector<Cpoint> PointsOnCurve;   //The points on the curve
 	int DataNum;	// DataNum+1 is the number of data points(P0...Pn)
 	int Degree;	// The degree of basis functions.

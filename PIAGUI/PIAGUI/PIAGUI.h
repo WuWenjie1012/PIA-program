@@ -3,11 +3,12 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_PIAGUI.h"
 #include <QFileDialog>
-#include "Mathematic.h"
+//#include "Mathematic.h"
 //#include "Bspline.h"
 #include <string>
 //#include <Eigen\Core>
 #include "Curve.h"
+
 
 class PIAGUI : public QMainWindow
 {
@@ -18,11 +19,7 @@ public:
 
 //	Object mObject;
 //	vector<Object> mObject_;	// Object sequence, for back up
-	enum IterateType
-	{
-		PIA,
-		LSPIA
-	}IteType;
+	
 
 private slots:
 	void loadDataFromFile();	// Load data from file
@@ -35,6 +32,12 @@ private slots:
 	void m_PIAButton();			// PIA button
 private:
 	Ui::PIAGUIClass ui;
+
+	enum IterateType
+	{
+		PIA,
+		LSPIA
+	}IteType;
 
 	QString FilePathName;
 	double PresentError;

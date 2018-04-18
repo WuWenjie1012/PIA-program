@@ -39,9 +39,6 @@
     <ClCompile Include="GeneratedFiles\qrc_PIAGUI.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mathematic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="myopenglwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,9 +67,6 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_PIAGUI.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mathematic.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="myopenglwindow.h">
       <Filter>Header Files</Filter>

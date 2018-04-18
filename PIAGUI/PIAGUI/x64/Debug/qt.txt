@@ -1,0 +1,1 @@
+Uic'ing PIAGUI.ui...;D:\Qt\Qt5.8.0\5.8\msvc2015_64\bin\uic.exe;"D:\myGit\PIAGUI\PIAGUI\PIAGUI.ui" -o ".\GeneratedFiles\ui_PIAGUI.h"  

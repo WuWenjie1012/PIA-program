@@ -1,10 +1,6 @@
-﻿  Curve.cpp
-  main.cpp
-  Mathematic.cpp
-  myopenglwindow.cpp
-  Bspline.cpp
+﻿  Uic'ing PIAGUI.ui...
   PIAGUI.cpp
-d:\mygit\piagui\piagui\mathematic.h(39): warning C4700: 使用了未初始化的局部变量“pt”
+  main.cpp
   qrc_PIAGUI.cpp
   moc_PIAGUI.cpp
   qrc_PIAGUI.cpp

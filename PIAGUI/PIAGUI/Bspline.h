@@ -1,11 +1,17 @@
 #pragma once
 
-#include "Mathematic.h"
+//#include "Mathematic.h"
 //#include "PIAGUI.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <Eigen\Core>
+#include <vector>
+typedef Eigen::Vector3d Cpoint;
 using namespace std;
+
+extern int Method;
+
 class Bspline
 {
 public:
@@ -16,7 +22,6 @@ public:
 	double* BasisFuns(int i, double u, int p, vector<double> U);
 
 private:
-	vector<Cpoint> PointOnObject;
 	
 };
 
