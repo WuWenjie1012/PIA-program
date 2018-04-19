@@ -119,6 +119,12 @@ public:
         FittingError->setGeometry(QRect(120, 40, 121, 20));
         FittingError->setFont(font1);
         FittingError->setStyleSheet(QStringLiteral("background:transparent;border-width:0;border-style:outset"));
+        medit->raise();
+        medit_2->raise();
+        label_4->raise();
+        FittingError->raise();
+        CtlNum->raise();
+        DataNum->raise();
         PIAButton = new QRadioButton(centralWidget);
         PIAButton->setObjectName(QStringLiteral("PIAButton"));
         PIAButton->setGeometry(QRect(690, 260, 121, 16));

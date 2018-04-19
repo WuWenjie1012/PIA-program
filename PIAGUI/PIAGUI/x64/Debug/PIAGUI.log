@@ -1,8 +1,5 @@
-﻿  Uic'ing PIAGUI.ui...
-  PIAGUI.cpp
-  main.cpp
+﻿  Curve.cpp
   qrc_PIAGUI.cpp
-  moc_PIAGUI.cpp
   qrc_PIAGUI.cpp
 x64\Debug\/.\GeneratedFiles\/qrc_PIAGUI.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
   PIAGUI.vcxproj -> D:\myGit\PIAGUI\x64\Debug\PIAGUI.exe

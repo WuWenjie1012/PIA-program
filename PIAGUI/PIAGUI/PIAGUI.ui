@@ -155,6 +155,12 @@
       <string/>
      </property>
     </widget>
+    <zorder>medit</zorder>
+    <zorder>medit_2</zorder>
+    <zorder>label_4</zorder>
+    <zorder>FittingError</zorder>
+    <zorder>CtlNum</zorder>
+    <zorder>DataNum</zorder>
    </widget>
    <widget class="QRadioButton" name="PIAButton">
     <property name="geometry">

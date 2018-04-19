@@ -48,3 +48,4 @@ double*  Bspline::BasisFuns(int i, double u, int p, vector<double> U)
 	delete[] right;
 	return N;
 }
+

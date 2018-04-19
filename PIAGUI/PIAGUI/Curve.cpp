@@ -81,19 +81,19 @@ void Curve::loadDataFromFile(QString FileName)
 	CalculateDataParameter();
 	CalculateKnotVector();
 	
-	/*int pc;
-	cout << "Please put in the number of points on curve: ";
-	cin >> pc;
-	PosNum = pc;
-*/
 	CalculateCurvePoints();
-	cout << "The number of points on curve is: ";
-	cout << PointsOnCurve.size() << endl;
-
-	
+	/*for (int i = 0; i < KnotVector.size(); i++)
+		cout << KnotVector[i] << endl;
+	*/
 	CalculateDataPointsOnCurve();
 	CalculateDifferenceVector();
 	CalculatePresentError();
+
+	cout << CalculateFirstDerivative(0.2)<<endl;
+	int span = FindSpan(CtlNum, 3, 0.2, KnotVector);
+	Eigen::Vector3d test;
+	test = 3 * (0.2 - KnotVector[span])*(0.2 - KnotVector[span]) / ((KnotVector[span + 2] - KnotVector[span]) * (KnotVector[span + 1] - KnotVector[span]) * (KnotVector[span + 3] - KnotVector[span]))*CtlPoints[span]
+		 + 3 * ((0.2 - KnotVector[span-1]) / (KnotVector[span+1] - KnotVector[span-1]) * (;
 }
 
 void Curve::Normalize()
@@ -258,4 +258,44 @@ void Curve::OnePIAIterateStep()
 	CalculateDifferenceVector();
 	CalculatePresentError();
 	CalculateCurvePoints();
+}
+
+Eigen::Vector3d Curve::CalculateFirstDerivative(double u)
+{
+	vector<double> ptU;
+	ptU.resize(KnotVector.size() - 2);
+	for (int i = 0; i < ptU.size(); i++)
+	{
+		ptU[i] = KnotVector[i + 1];
+	}
+	int span = FindSpan(CtlNum - 1, Degree - 1, u, ptU);
+	double *N = BasisFuns(span, u, Degree - 1, ptU);
+	
+	Eigen::Vector3d pt(0, 0, 0);
+	for (int i = 0; i <= Degree - 1; i++)
+	{
+		pt.x() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].x() - CtlPoints[span - Degree + i + 1].x()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
+		pt.y() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].y() - CtlPoints[span - Degree + i + 1].y()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
+		pt.z() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].z() - CtlPoints[span - Degree + i + 1].z()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
+
+	}
+
+	return pt;
+}
+
+Eigen::Vector3d Curve::CalculateSecondDerivative(double u)
+{
+	int span = FindSpan(CtlNum, Degree - 1, u, KnotVector);
+	double *N = BasisFuns(span, u, Degree - 1, KnotVector);
+
+	Eigen::Vector3d pt(0, 0, 0);
+	for (int i = 0; i <= Degree - 1; i++)
+	{
+		pt.x() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].x() - CtlPoints[span - Degree + i - 2].x()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
+		pt.y() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].y() - CtlPoints[span - Degree + i - 2].y()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
+		pt.z() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].z() - CtlPoints[span - Degree + i - 2].z()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
+
+	}
+
+	return pt;
 }

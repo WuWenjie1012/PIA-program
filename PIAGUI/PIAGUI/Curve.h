@@ -58,6 +58,11 @@ public:
 	void CalculateDifferenceVector();
 
 	void OnePIAIterateStep();
+
+	Eigen::Vector3d CalculateFirstDerivative(double u);
+	Eigen::Vector3d CalculateSecondDerivative(double u);
+
+
 private:
 	vector<Cpoint> CtlPoints;	// Control points for curve
 	vector<Cpoint> DataPoints;	// The data points
