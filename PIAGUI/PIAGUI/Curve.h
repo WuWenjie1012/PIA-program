@@ -1,6 +1,7 @@
 #pragma once
 #include "Bspline.h"
 #include <Eigen\Core>
+#include <Eigen\Dense>
 #include <QtWidgets/QMainWindow>
 //using namespace Eigen;
 //typedef Eigen::Vector3d cpoint;
@@ -46,6 +47,7 @@ public:
 	void CalculateKnotVector();		// Calculate the knot vector
 	void CalculateDataParameter();	// Calculate the data parameters
 	void CalculateCtlSequence();	// Calculate the contrl points sequence
+	void CaclculateParametersOnCurve();	// Calculate parameters for points on curve
 	void CalculateCurvePoints();	// Calculate the points on the curve
 	void CalculateDataPointsOnCurve();
 
@@ -59,19 +61,32 @@ public:
 
 	void OnePIAIterateStep();
 
-	Eigen::Vector3d CalculateFirstDerivative(double u);
-	Eigen::Vector3d CalculateSecondDerivative(double u);
-
+	// Functions for first and second derivative
+	void CalculateQCtlPoints();
+	void CalculateRCtlPoints();
+	Eigen::Vector3d CalculateOneFirstDerivative(double u);
+	Eigen::Vector3d CalculateOneSecondDerivative(double u);
+	void CalculateFirstDerivativeOnCurve();
+	void CalculateSecondDerivativeOnCurve();
+	void CalculateCurvatureOnCurve();
 
 private:
 	vector<Cpoint> CtlPoints;	// Control points for curve
+	vector<Cpoint> QCtlPoints;	// Control points for first derivative curve
+	vector<Cpoint> RCtlPoints;	// Control points for second derivative curve
 	vector<Cpoint> DataPoints;	// The data points
 	vector<Cpoint> DataPointsOnCurve;	// [t0, t1, t2, ... , tn] on curve
 	vector<double> KnotVector;	// Knot vector for curve
 	vector<double> DataParameters;	// The data parameter
+
+	vector<double> CarvatureOnCurve;	// Carvature for points on curve
+	vector<Cpoint> FirstDerivativeOnCurve;	// First derivative
+	vector<Cpoint> SecondDerivativeOnCurve;	// Second derivative
+
 	vector<int> CtlSequence;	// The contrl points sequence
 	vector<Eigen::Vector3d> DifferenceVector;	// The difference vector
 	vector<Cpoint> PointsOnCurve;   //The points on the curve
+	vector<double> ParametersOnCurve;	// Parameters for points on curve
 	int DataNum;	// DataNum+1 is the number of data points(P0...Pn)
 	int Degree;	// The degree of basis functions.
 	int CtlNum;	// CtlNum+1 is the number of contrl points

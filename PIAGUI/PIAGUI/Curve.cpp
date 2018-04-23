@@ -81,19 +81,24 @@ void Curve::loadDataFromFile(QString FileName)
 	CalculateDataParameter();
 	CalculateKnotVector();
 	
+	CaclculateParametersOnCurve();
 	CalculateCurvePoints();
-	/*for (int i = 0; i < KnotVector.size(); i++)
-		cout << KnotVector[i] << endl;
-	*/
+	
 	CalculateDataPointsOnCurve();
+
 	CalculateDifferenceVector();
 	CalculatePresentError();
 
-	cout << CalculateFirstDerivative(0.2)<<endl;
-	int span = FindSpan(CtlNum, 3, 0.2, KnotVector);
-	Eigen::Vector3d test;
-	test = 3 * (0.2 - KnotVector[span])*(0.2 - KnotVector[span]) / ((KnotVector[span + 2] - KnotVector[span]) * (KnotVector[span + 1] - KnotVector[span]) * (KnotVector[span + 3] - KnotVector[span]))*CtlPoints[span]
-		 + 3 * ((0.2 - KnotVector[span-1]) / (KnotVector[span+1] - KnotVector[span-1]) * (;
+	CalculateQCtlPoints();
+	CalculateRCtlPoints();
+	CalculateFirstDerivativeOnCurve();
+	CalculateSecondDerivativeOnCurve();
+	CalculateCurvatureOnCurve();
+	cout << FirstDerivativeOnCurve[0] << endl;
+	cout << SecondDerivativeOnCurve[0] << endl;
+
+	cout << FirstDerivativeOnCurve[0].cross(SecondDerivativeOnCurve[0]) << endl;
+	cout << FirstDerivativeOnCurve[0].cross(SecondDerivativeOnCurve[0]).norm() << endl;
 }
 
 void Curve::Normalize()
@@ -106,15 +111,23 @@ void Curve::Normalize()
 	}
 }
 
-void Curve::CalculateCurvePoints()
+void Curve::CaclculateParametersOnCurve()
 {
-	
+	ParametersOnCurve.resize(PosNum + 1);
 	double u = 0;
-	PointsOnCurve.resize(PosNum + 1);
 	for (int i = 0; i < PosNum + 1; i++)
 	{
 		u = (double)i / PosNum;
-		PointsOnCurve[i] = CalculateOnePoint(u);
+		ParametersOnCurve[i] = u;
+	}
+}
+void Curve::CalculateCurvePoints()
+{
+	
+	PointsOnCurve.resize(PosNum + 1);
+	for (int i = 0; i < PosNum + 1; i++)
+	{
+		PointsOnCurve[i] = CalculateOnePoint(ParametersOnCurve[i]);
 	}
 }
 
@@ -135,9 +148,7 @@ Cpoint Curve::CalculateOnePoint(double u)
 	
 	for (int i = 0; i <= Degree; i++)
 	{
-		C.x() = C.x() + N[i] * CtlPoints[span - Degree + i].x();
-		C.y() = C.y() + N[i] * CtlPoints[span - Degree + i].y();
-		C.z() = C.z() + N[i] * CtlPoints[span - Degree + i].z();
+		C = C + N[i] * CtlPoints[span - Degree + i];
 	}
 	return C;
 }
@@ -260,7 +271,7 @@ void Curve::OnePIAIterateStep()
 	CalculateCurvePoints();
 }
 
-Eigen::Vector3d Curve::CalculateFirstDerivative(double u)
+Eigen::Vector3d Curve::CalculateOneFirstDerivative(double u)
 {
 	vector<double> ptU;
 	ptU.resize(KnotVector.size() - 2);
@@ -268,34 +279,88 @@ Eigen::Vector3d Curve::CalculateFirstDerivative(double u)
 	{
 		ptU[i] = KnotVector[i + 1];
 	}
-	int span = FindSpan(CtlNum - 1, Degree - 1, u, ptU);
-	double *N = BasisFuns(span, u, Degree - 1, ptU);
+	
+	int pDegree = Degree - 1;
+	int pCtlNum = CtlNum - 1;
+	int span = FindSpan(pCtlNum, pDegree, u, ptU);
+	double *N = BasisFuns(span, u, pDegree, ptU);
 	
 	Eigen::Vector3d pt(0, 0, 0);
-	for (int i = 0; i <= Degree - 1; i++)
-	{
-		pt.x() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].x() - CtlPoints[span - Degree + i + 1].x()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
-		pt.y() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].y() - CtlPoints[span - Degree + i + 1].y()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
-		pt.z() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i + 2].z() - CtlPoints[span - Degree + i + 1].z()) / (KnotVector[span + 1 + i] - KnotVector[span - Degree + i + 1]);
-
+	for (int i = 0; i <= pDegree; i++)
+	{	
+		pt = pt + N[i] * QCtlPoints[span - pDegree + i];
 	}
 
 	return pt;
 }
 
-Eigen::Vector3d Curve::CalculateSecondDerivative(double u)
+Eigen::Vector3d Curve::CalculateOneSecondDerivative(double u)
 {
-	int span = FindSpan(CtlNum, Degree - 1, u, KnotVector);
-	double *N = BasisFuns(span, u, Degree - 1, KnotVector);
+	vector<double> ptU;
+	ptU.resize(KnotVector.size() - 4);
+	for (int i = 0; i < ptU.size(); i++)
+	{
+		ptU[i] = KnotVector[i + 2];
+	}
+
+	int pDegree = Degree - 2;
+	int pCtlNum = CtlNum - 2;
+	int span = FindSpan(pCtlNum, pDegree, u, ptU);
+	double *N = BasisFuns(span, u, pDegree, ptU);
 
 	Eigen::Vector3d pt(0, 0, 0);
-	for (int i = 0; i <= Degree - 1; i++)
+	for (int i = 0; i <= pDegree; i++)
 	{
-		pt.x() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].x() - CtlPoints[span - Degree + i - 2].x()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
-		pt.y() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].y() - CtlPoints[span - Degree + i - 2].y()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
-		pt.z() = pt.x() + N[i] * Degree * (CtlPoints[span - Degree + i - 1].z() - CtlPoints[span - Degree + i - 2].z()) / (KnotVector[span + i - 1] - KnotVector[span - Degree + i - 1]);
-
+		pt = pt + N[i] * RCtlPoints[span - pDegree + i];
 	}
 
 	return pt;
+}
+
+void Curve::CalculateQCtlPoints()
+{
+	QCtlPoints.resize(CtlNum);
+
+	for (int i = 0; i < CtlNum; i++)
+	{
+		QCtlPoints[i] = (CtlPoints[i + 1] - CtlPoints[i]) * Degree / (KnotVector[i + Degree + 1] - KnotVector[i + 1]);
+	}
+}
+
+void Curve::CalculateRCtlPoints()
+{
+	RCtlPoints.resize(CtlNum - 1);
+
+	for (int i = 0; i < CtlNum - 1; i++)
+	{
+		RCtlPoints[i] = (QCtlPoints[i + 1] - QCtlPoints[i]) * (Degree - 1) / (KnotVector[i + Degree + 1] - KnotVector[i + 2]);
+	}
+}
+
+void Curve::CalculateFirstDerivativeOnCurve()
+{
+	FirstDerivativeOnCurve.resize(PosNum + 1);
+	for (int i = 0; i < PosNum + 1; i++)
+	{
+		FirstDerivativeOnCurve[i] = CalculateOneFirstDerivative(ParametersOnCurve[i]);
+	}
+}
+
+void Curve::CalculateSecondDerivativeOnCurve()
+{
+	SecondDerivativeOnCurve.resize(PosNum + 1);
+	for (int i = 0; i < PosNum + 1; i++)
+	{
+		SecondDerivativeOnCurve[i] = CalculateOneSecondDerivative(ParametersOnCurve[i]);
+	}
+}
+
+void Curve::CalculateCurvatureOnCurve()
+{
+	// Plane curve
+	CarvatureOnCurve.resize(PosNum + 1);
+	for (int i = 0; i < PosNum + 1; i++)
+	{
+		CarvatureOnCurve[i] = FirstDerivativeOnCurve[i].cross(SecondDerivativeOnCurve[i]).z() / pow(FirstDerivativeOnCurve[i].norm(), 3);
+	}
 }
