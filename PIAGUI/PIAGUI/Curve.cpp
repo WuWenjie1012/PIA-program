@@ -94,11 +94,7 @@ void Curve::loadDataFromFile(QString FileName)
 	CalculateFirstDerivativeOnCurve();
 	CalculateSecondDerivativeOnCurve();
 	CalculateCurvatureOnCurve();
-	cout << FirstDerivativeOnCurve[0] << endl;
-	cout << SecondDerivativeOnCurve[0] << endl;
-
-	cout << FirstDerivativeOnCurve[0].cross(SecondDerivativeOnCurve[0]) << endl;
-	cout << FirstDerivativeOnCurve[0].cross(SecondDerivativeOnCurve[0]).norm() << endl;
+	
 }
 
 void Curve::Normalize()
@@ -269,6 +265,12 @@ void Curve::OnePIAIterateStep()
 	CalculateDifferenceVector();
 	CalculatePresentError();
 	CalculateCurvePoints();
+
+	CalculateQCtlPoints();
+	CalculateRCtlPoints();
+	CalculateFirstDerivativeOnCurve();
+	CalculateSecondDerivativeOnCurve();
+	CalculateCurvatureOnCurve();
 }
 
 Eigen::Vector3d Curve::CalculateOneFirstDerivative(double u)
@@ -358,9 +360,9 @@ void Curve::CalculateSecondDerivativeOnCurve()
 void Curve::CalculateCurvatureOnCurve()
 {
 	// Plane curve
-	CarvatureOnCurve.resize(PosNum + 1);
+	CurvatureOnCurve.resize(PosNum + 1);
 	for (int i = 0; i < PosNum + 1; i++)
 	{
-		CarvatureOnCurve[i] = FirstDerivativeOnCurve[i].cross(SecondDerivativeOnCurve[i]).z() / pow(FirstDerivativeOnCurve[i].norm(), 3);
+		CurvatureOnCurve[i] = FirstDerivativeOnCurve[i].cross(SecondDerivativeOnCurve[i]).z() / pow(FirstDerivativeOnCurve[i].norm(), 3);
 	}
 }

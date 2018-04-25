@@ -5,6 +5,7 @@ extern bool CtlPointOpen;
 extern bool DataPointOpen;
 extern bool CtlPolyOpen;
 extern bool BsplineCurveOpen;
+extern bool CurvatureOpen;
 extern int Method;
 
 PIAGUI::PIAGUI(QWidget *parent)
@@ -19,6 +20,9 @@ PIAGUI::PIAGUI(QWidget *parent)
 	connect(ui.CtlPoints, SIGNAL(clicked()), this, SLOT(DisplayCtlPoints()));	// Display option
 	connect(ui.DataPoints, SIGNAL(clicked()), this, SLOT(DisplayDataPoints()));	// Display option
 	connect(ui.CtlPoly, SIGNAL(clicked()), this, SLOT(DisplayCtlPoly()));	// Display option
+	connect(ui.CtlPoly, SIGNAL(clicked()), this, SLOT(DisplayCtlPoly()));	// Display option
+	connect(ui.CurvaturePole, SIGNAL(clicked()), this, SLOT(DisplayCurvature()));	// Display option
+
 	connect(ui.BsplineCurve, SIGNAL(clicked()), this, SLOT(DisplayBsplineCurve()));	// Display option
 	connect(ui.OneStepIterate, SIGNAL(clicked()), this, SLOT(OneStepIterate()));	// Display option
 	connect(ui.PIAButton, SIGNAL(clicked()), this, SLOT(m_PIAButton()));	// Display option
@@ -86,6 +90,14 @@ void PIAGUI::DisplayDataPoints()
 		DataPointOpen = true;
 	else
 		DataPointOpen = false;
+}
+
+void PIAGUI::DisplayCurvature()
+{
+	if (ui.CurvaturePole->checkState() == Qt::Checked)
+		CurvatureOpen = true;
+	else
+		CurvatureOpen = false;
 }
 
 void PIAGUI::OneStepIterate()

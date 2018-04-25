@@ -28,6 +28,8 @@ private slots:
 	void DisplayBsplineCurve();	// Display the B-spline curve
 	void DisplayCtlPoly();		// Display the control polygon
 	void DisplayDataPoints();	// Display the data points
+	void DisplayCurvature();	// Display the Curvature
+
 	void OneStepIterate();		// One step iterate
 	void m_PIAButton();			// PIA button
 private:

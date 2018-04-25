@@ -6,6 +6,7 @@ extern bool DataPointOpen;
 extern bool CtlPointOpen;
 extern bool CtlPolyOpen;
 extern bool BsplineCurveOpen;
+extern bool CurvatureOpen;
 
 MyOpenGLWidget::MyOpenGLWidget(QWidget *parent)
 	: QOpenGLWidget(parent)
@@ -63,13 +64,14 @@ void MyOpenGLWidget::paintGL()
 	{
 		if (CtlPointOpen == true)
 		{
+			vector<Cpoint> pt = mCurve->GetCtlPoints();
 			glPointSize(4.0f);
 			glBegin(GL_POINTS);
 			glColor3d(1.0, 0.0, 0.0);
 			for (int i = 0; i < mCurve->GetCtlNum() + 1; i++)
 			{
 
-				glVertex3d(mCurve->GetCtlPoints()[i].x(), mCurve->GetCtlPoints()[i].y(), mCurve->GetCtlPoints()[i].z());
+				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
 
 			}
 			glEnd();
@@ -77,13 +79,14 @@ void MyOpenGLWidget::paintGL()
 
 		if (DataPointOpen == true)
 		{
+			vector<Cpoint> pt = mCurve->GetDataPoints();
 			glPointSize(4.0f);
 			glBegin(GL_POINTS);
 			glColor3d(0.5, 0.5, 0.5);
 			for (int i = 0; i < mCurve->GetDataNum() + 1; i++)
 			{
 
-				glVertex3d(mCurve->GetDataPoints()[i].x(), mCurve->GetDataPoints()[i].y(), mCurve->GetDataPoints()[i].z());
+				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
 
 			}
 			glEnd();
@@ -91,14 +94,15 @@ void MyOpenGLWidget::paintGL()
 		
 		if (CtlPolyOpen == true)
 		{
+			vector<Cpoint> pt = mCurve->GetCtlPoints();
 			glLineWidth(1.0f);
 			glBegin(GL_LINES);
 			glColor3d(1.0, 0.0, 0.0);
 			for (int i = 0; i < mCurve->GetCtlNum(); i++)
 			{
 
-				glVertex3d(mCurve->GetCtlPoints()[i].x(), mCurve->GetCtlPoints()[i].y(), mCurve->GetCtlPoints()[i].z());
-				glVertex3d(mCurve->GetCtlPoints()[i + 1].x(), mCurve->GetCtlPoints()[i + 1].y(), mCurve->GetCtlPoints()[i + 1].z());
+				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
+				glVertex3d(pt[i + 1].x(), pt[i + 1].y(), pt[i + 1].z());
 
 			}
 			glEnd();
@@ -106,16 +110,35 @@ void MyOpenGLWidget::paintGL()
 		
 		if (BsplineCurveOpen == true)
 		{
+			vector<Cpoint> pt = mCurve->GetCurvePoints();
 			glLineWidth(1.0f);
 			glBegin(GL_LINES);
 			glColor3d(0.0, 1.0, 0.0);
 			for (int i = 0; i < mCurve->GetPosNum(); i++)
 			{
-				glVertex3d(mCurve->GetCurvePoints()[i].x(), mCurve->GetCurvePoints()[i].y(), mCurve->GetCurvePoints()[i].z());
-				glVertex3d(mCurve->GetCurvePoints()[i + 1].x(), mCurve->GetCurvePoints()[i + 1].y(), mCurve->GetCurvePoints()[i + 1].z());
+				glVertex3d(pt[i].x(), mCurve->GetCurvePoints()[i].y(), pt[i].z());
+				glVertex3d(pt[i + 1].x(), mCurve->GetCurvePoints()[i + 1].y(), pt[i + 1].z());
 			}
 			glEnd();
 		}	
+
+		if (CurvatureOpen == true)
+		{
+			vector<Cpoint> pt = mCurve->GetCurvePoints();
+			vector<Cpoint> ptf = mCurve->GetFirstDerivative();
+			vector<double> ptc = mCurve->GetCurvature();
+			double scale = 0;
+			glLineWidth(1.0f);
+			glBegin(GL_LINES);
+			glColor3d(0.0, 1.0, 0.0);
+			for (int i = 0; i < mCurve->GetPosNum(); i++)
+			{
+				scale = ptc[i] /(ptf[i].norm() * 200);
+				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
+				glVertex3d(pt[i].x() + ptf[i].y() * scale, pt[i].y() - ptf[i].x() * scale, pt[i].z());
+			}
+			glEnd();
+		}
 	}
 
 	update();

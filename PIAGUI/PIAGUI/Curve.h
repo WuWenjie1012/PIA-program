@@ -21,6 +21,9 @@ public:
 	vector<Cpoint> GetCtlPoints() { return CtlPoints; }
 	vector<Cpoint> GetDataPoints() { return DataPoints; }
 	vector<Cpoint> GetCurvePoints() { return PointsOnCurve; }
+	vector<Eigen::Vector3d> GetDifferenceVector() { return DifferenceVector; }
+	vector<Cpoint> GetFirstDerivative() { return FirstDerivativeOnCurve; }
+	vector<double> GetCurvature() { return CurvatureOnCurve; }
 
 	vector<int> GetCtlSequence() { return CtlSequence; }
 
@@ -30,7 +33,6 @@ public:
 	int GetPosNum() { return PosNum; }
 	double GetPresentError() { return PresentError; }
 	double GetTargetError() { return TargetError; }
-	vector<Cpoint> GetDifferenceVector() { return DifferenceVector; }
 
 	void loadDataFromFile(QString FileName);
 	void SetPoiNum(const int &a) { DataNum = a; }
@@ -79,7 +81,7 @@ private:
 	vector<double> KnotVector;	// Knot vector for curve
 	vector<double> DataParameters;	// The data parameter
 
-	vector<double> CarvatureOnCurve;	// Carvature for points on curve
+	vector<double> CurvatureOnCurve;	// Carvature for points on curve
 	vector<Cpoint> FirstDerivativeOnCurve;	// First derivative
 	vector<Cpoint> SecondDerivativeOnCurve;	// Second derivative
 
