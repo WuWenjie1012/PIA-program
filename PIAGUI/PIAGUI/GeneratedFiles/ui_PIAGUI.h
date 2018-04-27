@@ -59,6 +59,9 @@ public:
     QLabel *label_5;
     QLineEdit *PosNum;
     QLabel *label_6;
+    QLabel *lable111;
+    QLineEdit *CtlNum_2;
+    QPushButton *SetCtlNum;
     QMenuBar *menuBar;
     QMenu *file;
     QMenu *data;
@@ -170,10 +173,10 @@ public:
         TargetError = new QLineEdit(centralWidget);
         TargetError->setObjectName(QStringLiteral("TargetError"));
         TargetError->setEnabled(true);
-        TargetError->setGeometry(QRect(860, 180, 113, 20));
+        TargetError->setGeometry(QRect(860, 210, 113, 20));
         label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(690, 180, 121, 16));
+        label_3->setGeometry(QRect(690, 210, 121, 16));
         label_3->setFont(font);
         DataPoints = new QCheckBox(centralWidget);
         DataPoints->setObjectName(QStringLiteral("DataPoints"));
@@ -196,6 +199,18 @@ public:
         font2.setBold(false);
         font2.setWeight(50);
         label_6->setFont(font2);
+        lable111 = new QLabel(centralWidget);
+        lable111->setObjectName(QStringLiteral("lable111"));
+        lable111->setGeometry(QRect(690, 170, 121, 16));
+        lable111->setFont(font);
+        CtlNum_2 = new QLineEdit(centralWidget);
+        CtlNum_2->setObjectName(QStringLiteral("CtlNum_2"));
+        CtlNum_2->setEnabled(true);
+        CtlNum_2->setGeometry(QRect(860, 170, 113, 20));
+        SetCtlNum = new QPushButton(centralWidget);
+        SetCtlNum->setObjectName(QStringLiteral("SetCtlNum"));
+        SetCtlNum->setGeometry(QRect(980, 170, 41, 21));
+        SetCtlNum->setFont(font1);
         PIAGUIClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(PIAGUIClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -252,6 +267,9 @@ public:
         label_5->setText(QApplication::translate("PIAGUIClass", "Points On Curve", Q_NULLPTR));
         PosNum->setText(QApplication::translate("PIAGUIClass", "1000", Q_NULLPTR));
         label_6->setText(QApplication::translate("PIAGUIClass", "+1", Q_NULLPTR));
+        lable111->setText(QApplication::translate("PIAGUIClass", "Control Number", Q_NULLPTR));
+        CtlNum_2->setText(QApplication::translate("PIAGUIClass", "200", Q_NULLPTR));
+        SetCtlNum->setText(QApplication::translate("PIAGUIClass", "Set", Q_NULLPTR));
         file->setTitle(QApplication::translate("PIAGUIClass", "File", Q_NULLPTR));
         data->setTitle(QApplication::translate("PIAGUIClass", "Data", Q_NULLPTR));
     } // retranslateUi

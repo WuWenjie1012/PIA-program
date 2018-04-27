@@ -32,6 +32,9 @@ private slots:
 
 	void OneStepIterate();		// One step iterate
 	void m_PIAButton();			// PIA button
+	void m_LSPIAButton();			// LSPIA button
+
+	void SetCtlNum();			// Set the number of control points
 private:
 	Ui::PIAGUIClass ui;
 

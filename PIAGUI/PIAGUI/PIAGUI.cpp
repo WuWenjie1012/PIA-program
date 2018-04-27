@@ -20,12 +20,15 @@ PIAGUI::PIAGUI(QWidget *parent)
 	connect(ui.CtlPoints, SIGNAL(clicked()), this, SLOT(DisplayCtlPoints()));	// Display option
 	connect(ui.DataPoints, SIGNAL(clicked()), this, SLOT(DisplayDataPoints()));	// Display option
 	connect(ui.CtlPoly, SIGNAL(clicked()), this, SLOT(DisplayCtlPoly()));	// Display option
-	connect(ui.CtlPoly, SIGNAL(clicked()), this, SLOT(DisplayCtlPoly()));	// Display option
 	connect(ui.CurvaturePole, SIGNAL(clicked()), this, SLOT(DisplayCurvature()));	// Display option
-
 	connect(ui.BsplineCurve, SIGNAL(clicked()), this, SLOT(DisplayBsplineCurve()));	// Display option
-	connect(ui.OneStepIterate, SIGNAL(clicked()), this, SLOT(OneStepIterate()));	// Display option
-	connect(ui.PIAButton, SIGNAL(clicked()), this, SLOT(m_PIAButton()));	// Display option
+
+	connect(ui.OneStepIterate, SIGNAL(clicked()), this, SLOT(OneStepIterate()));	// 
+	connect(ui.PIAButton, SIGNAL(clicked()), this, SLOT(m_PIAButton()));	// 
+	connect(ui.LSPIAButton, SIGNAL(clicked()), this, SLOT(m_LSPIAButton()));	//
+
+	connect(ui.SetCtlNum, SIGNAL(clicked()), this, SLOT(SetCtlNum()));	// 
+
 	/*if (ui.CtlPoints->checkState() == Qt::Checked)
 		CtlPointOpen = true;
 	else
@@ -45,9 +48,23 @@ void PIAGUI::loadDataFromFile()
 		mCurve = new Curve;
 		mCurve->SetPosNum(ui.PosNum->text().toInt());
 		mCurve->loadDataFromFile(FilePathName);
-		ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 		ui.DataNum->setText(QString::number(mCurve->GetDataNum() + 1));
-		ui.CtlNum->setText(QString::number(mCurve->GetCtlNum() + 1));
+		
+		switch (IteType)
+		{
+		case PIAGUI::PIA:
+			mCurve->SetIteType(PIA);
+			mCurve->Init();
+			ui.CtlNum->setText(QString::number(mCurve->GetCtlNum() + 1));
+			ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
+			break;
+		case PIAGUI::LSPIA:
+			mCurve->SetIteType(LSPIA);		
+			break;
+		default:
+			break;
+		}
+		
 	}	
 }	
 
@@ -105,7 +122,7 @@ void PIAGUI::OneStepIterate()
 	switch (IteType)
 	{
 	case PIAGUI::PIA:
-		TargetError = ui.TargetError->text().toDouble();
+		TargetError = ui.TargetError->text().toDouble();	
 		mCurve->OnePIAIterateStep();
 		ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 		break;
@@ -119,6 +136,18 @@ void PIAGUI::OneStepIterate()
 void PIAGUI::m_PIAButton()
 {
 	IteType = PIA;
-//	cout << IteType << endl;
-	Method = 0;
+}
+
+
+void PIAGUI::m_LSPIAButton()
+{
+	IteType = LSPIA;
+}
+
+void PIAGUI::SetCtlNum()
+{
+	mCurve->SetCtlNum(ui.CtlNum->text().toInt() - 1);
+	mCurve->Init();
+	ui.CtlNum->setText(QString::number(mCurve->GetCtlNum() + 1));
+	ui.FittingError->setText(QString::number(mCurve->GetPresentError()));
 }

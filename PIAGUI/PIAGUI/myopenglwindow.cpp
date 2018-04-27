@@ -62,7 +62,7 @@ void MyOpenGLWidget::paintGL()
 	glTranslatef(tanslate_x, tanslate_y, 0.0);
 	if (mCurve)
 	{
-		if (CtlPointOpen == true)
+		if (CtlPointOpen == true && mCurve->GetCtlPoints().size() != 0)
 		{
 			vector<Cpoint> pt = mCurve->GetCtlPoints();
 			glPointSize(4.0f);
@@ -77,7 +77,7 @@ void MyOpenGLWidget::paintGL()
 			glEnd();
 		}
 
-		if (DataPointOpen == true)
+		if (DataPointOpen == true && mCurve->GetDataPoints().size() != 0)
 		{
 			vector<Cpoint> pt = mCurve->GetDataPoints();
 			glPointSize(4.0f);
@@ -92,7 +92,7 @@ void MyOpenGLWidget::paintGL()
 			glEnd();
 		}
 		
-		if (CtlPolyOpen == true)
+		if (CtlPolyOpen == true && mCurve->GetCtlPoints().size() != 0)
 		{
 			vector<Cpoint> pt = mCurve->GetCtlPoints();
 			glLineWidth(1.0f);
@@ -108,7 +108,7 @@ void MyOpenGLWidget::paintGL()
 			glEnd();
 		}
 		
-		if (BsplineCurveOpen == true)
+		if (BsplineCurveOpen == true && mCurve->GetCurvePoints().size() != 0)
 		{
 			vector<Cpoint> pt = mCurve->GetCurvePoints();
 			glLineWidth(1.0f);
@@ -122,7 +122,7 @@ void MyOpenGLWidget::paintGL()
 			glEnd();
 		}	
 
-		if (CurvatureOpen == true)
+		if (CurvatureOpen == true && mCurve->GetCurvature().size() != 0)
 		{
 			vector<Cpoint> pt = mCurve->GetCurvePoints();
 			vector<Cpoint> ptf = mCurve->GetFirstDerivative();

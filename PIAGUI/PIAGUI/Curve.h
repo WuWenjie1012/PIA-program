@@ -45,6 +45,7 @@ public:
 	void SetDataParameters(const vector<double> &a) { DataParameters = a; }
 	void SetCtlSequence(const vector<int> &a) { CtlSequence = a; }
 	void SetTargetError(const double &a) { TargetError = a; }
+	void SetIteType(const int &a) { IteType = a; }
 
 	void CalculateKnotVector();		// Calculate the knot vector
 	void CalculateDataParameter();	// Calculate the data parameters
@@ -72,6 +73,10 @@ public:
 	void CalculateSecondDerivativeOnCurve();
 	void CalculateCurvatureOnCurve();
 
+	void Init();	// Init for iteration
+
+	Eigen::MatrixXd CalculateConfigurationMatrixA();	
+
 private:
 	vector<Cpoint> CtlPoints;	// Control points for curve
 	vector<Cpoint> QCtlPoints;	// Control points for first derivative curve
@@ -98,4 +103,12 @@ private:
 	double Mid;
 	double PresentError;	// Present fitting error
 	double TargetError;		// Final fitting error we want
+
+	int IteType;	// 0 - PIA, 1 - LSPIA
+
+	Eigen::MatrixXd A;	// Configuration Matrix
+	Eigen::MatrixXd CtlPns;	// Control points
+	Eigen::MatrixXd DataPns;	// Data points
+	Eigen::MatrixXd Diff;	// Data points
+
 };

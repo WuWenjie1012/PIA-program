@@ -74,16 +74,27 @@ void Curve::loadDataFromFile(QString FileName)
 	}
 	fin.close();
 
+	DataNum = DataPoints.size() - 1;
+
 	Mid = (Max + Min) / 2;
 	Normalize();
 
-	DataNum = DataPoints.size() - 1;
+	/*int span = FindSpan(CtlNum, Degree, DataParameters[3], KnotVector);
+	cout << "span: " << span << endl;
+	double *N = BasisFuns(span, DataParameters[3], 3, KnotVector);
+	for (int i = 0; i < 4; i++)
+		cout << N[i] << endl;*/
+	
+}
+
+void Curve::Init()
+{
 	CalculateDataParameter();
 	CalculateKnotVector();
-	
+
 	CaclculateParametersOnCurve();
 	CalculateCurvePoints();
-	
+
 	CalculateDataPointsOnCurve();
 
 	CalculateDifferenceVector();
@@ -94,9 +105,19 @@ void Curve::loadDataFromFile(QString FileName)
 	CalculateFirstDerivativeOnCurve();
 	CalculateSecondDerivativeOnCurve();
 	CalculateCurvatureOnCurve();
-	
-}
 
+	A = CalculateConfigurationMatrixA();
+	CtlPns = Eigen::MatrixXd::Zero(CtlNum + 1, 3);
+	DataPns = Eigen::MatrixXd::Zero(DataNum + 1, 3);
+	for (int i = 0; i <= CtlNum; i++)
+		for (int j = 0; j < 3; j++)
+			CtlPns(i, j) = CtlPoints[i](j);
+
+	for (int i = 0; i <= DataNum; i++)
+		for (int j = 0; j < 3; j++)
+			DataPns(i, j) = DataPoints[i](j);
+
+}
 void Curve::Normalize()
 {
 	for (int i = 0; i < DataPoints.size(); i++)
@@ -210,27 +231,31 @@ void Curve::CalculateKnotVector()
 		for (int i = DataNum + 1; i < DataNum + 5; i++)
 			KnotVector[i] = 1;
 	}
-	//double pt, alph;
-	//int pk;
-	//double d = (DataNum + 1) / (CtlNum - 2);
+	else if (Method == 1)	// LSPIA method
+	{
+		CalculateCtlSequence();
+		CalculateCtlPoints();
 
-	//// For cubic B-spline curve, the knot vector is:
-	//// [0, 0, 0, 0, t4, t5, ... , tn, 1, 1, 1, 1]
-	//for (int i = 0; i < Degree + 1; i++)
-	//	KnotVector[i] = 0;
+		double pt, alph;
+		int pk;
+		double d = (DataNum + 1) / (CtlNum - 2);
 
-	//for (int i = 1; i < CtlNum - 2; i++)
-	//{
-	//	pk = floor(i * d);
-	//	alph = i * d - pk;
-	//	pt = (1 - alph) * DataParameters[pk - 1] + alph * DataParameters[pk];
-	//	KnotVector[i + Degree] = pt;
-	//}
+		// For cubic B-spline curve, the knot vector is:
+		// [0, 0, 0, 0, t4, t5, ... , tn, 1, 1, 1, 1]
+		for (int i = 0; i < Degree + 1; i++)
+			KnotVector[i] = 0;
 
-	//for (int i = 0; i < Degree + 1; i++)
-	//	KnotVector[CtlNum + i + 1] = 1;
+		for (int i = 1; i < CtlNum - 2; i++)
+		{
+			pk = floor(i * d);
+			alph = i * d - pk;
+			pt = (1 - alph) * DataParameters[pk - 1] + alph * DataParameters[pk];
+			KnotVector[i + Degree] = pt;
+		}
 
-	//
+		for (int i = 0; i < Degree + 1; i++)
+			KnotVector[CtlNum + i + 1] = 1;
+	}	
 }
 
 void Curve::CalculateDifferenceVector()
@@ -254,24 +279,7 @@ void Curve::CalculatePresentError()
 	PresentError = max;
 }
 
-void Curve::OnePIAIterateStep()
-{
-	for (int i = 0; i < CtlPoints.size(); i++)
-	{
-		CtlPoints[i] = CtlPoints[i] + DifferenceVector[i];
-	}
 
-	CalculateDataPointsOnCurve();
-	CalculateDifferenceVector();
-	CalculatePresentError();
-	CalculateCurvePoints();
-
-	CalculateQCtlPoints();
-	CalculateRCtlPoints();
-	CalculateFirstDerivativeOnCurve();
-	CalculateSecondDerivativeOnCurve();
-	CalculateCurvatureOnCurve();
-}
 
 Eigen::Vector3d Curve::CalculateOneFirstDerivative(double u)
 {
@@ -365,4 +373,50 @@ void Curve::CalculateCurvatureOnCurve()
 	{
 		CurvatureOnCurve[i] = FirstDerivativeOnCurve[i].cross(SecondDerivativeOnCurve[i]).z() / pow(FirstDerivativeOnCurve[i].norm(), 3);
 	}
+}
+
+Eigen::MatrixXd Curve::CalculateConfigurationMatrixA()
+{
+	Eigen::MatrixXd pA = Eigen::MatrixXd::Zero(DataNum + 1, CtlNum + 1);
+	int span;
+	double *N;
+	for (int i = 0; i <= DataNum; i++)
+	{
+		span = FindSpan(CtlNum, Degree, DataParameters[i], KnotVector);
+		N = BasisFuns(span, DataParameters[i], Degree, KnotVector);
+		for (int j = span - Degree; j <= span; j++)
+			pA(i, j) = N[j - span + Degree];
+	}
+
+	return pA;
+}
+
+void Curve::OnePIAIterateStep()
+{
+	Diff = DataPns - A * CtlPns;
+	//for (int i = 0; i < CtlPoints.size(); i++)
+	//{
+	//	CtlPoints[i] = CtlPoints[i] + DifferenceVector[i];
+	//}
+
+
+//	CalculateDataPointsOnCurve();
+//	CalculateDifferenceVector();
+//	CalculatePresentError();
+	double pt;
+	double max = 0;
+	for (int i = 0; i <= DataNum; i++)
+	{
+		pt = Diff.row(i).norm();
+		max = pt > max ? pt : max;
+	}
+	PresentError = max;
+	CtlPns = CtlPns + Diff;
+//	CalculateCurvePoints();
+
+//	CalculateQCtlPoints();
+//	CalculateRCtlPoints();
+//	CalculateFirstDerivativeOnCurve();
+//	CalculateSecondDerivativeOnCurve();
+//	CalculateCurvatureOnCurve();
 }
