@@ -1,7 +1,7 @@
 #pragma once
 #include "Bspline.h"
-#include <Eigen\Core>
-#include <Eigen\Dense>
+#include "include\Eigen\Core"
+#include "include\Eigen\Dense"
 #include <QtWidgets/QMainWindow>
 //using namespace Eigen;
 //typedef Eigen::Vector3d cpoint;
