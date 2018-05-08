@@ -43,7 +43,7 @@
       <string>Data Number:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="DataNum">
+    <widget class="QLineEdit" name="DataNumDisplay">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -107,7 +107,7 @@
       <string>Fitting Error:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="CtlNum">
+    <widget class="QLineEdit" name="CtlNumDisplay">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -131,7 +131,7 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLineEdit" name="FittingError">
+    <widget class="QLineEdit" name="FittingErrorDisplay">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -158,15 +158,15 @@
     <zorder>medit</zorder>
     <zorder>medit_2</zorder>
     <zorder>label_4</zorder>
-    <zorder>FittingError</zorder>
-    <zorder>CtlNum</zorder>
-    <zorder>DataNum</zorder>
+    <zorder>FittingErrorDisplay</zorder>
+    <zorder>CtlNumDisplay</zorder>
+    <zorder>DataNumDisplay</zorder>
    </widget>
    <widget class="QRadioButton" name="PIAButton">
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>260</y>
+      <y>280</y>
       <width>121</width>
       <height>16</height>
      </rect>
@@ -312,7 +312,7 @@
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>300</y>
+      <y>310</y>
       <width>89</width>
       <height>16</height>
      </rect>
@@ -351,7 +351,7 @@
     <property name="geometry">
      <rect>
       <x>860</x>
-      <y>210</y>
+      <y>200</y>
       <width>113</width>
       <height>20</height>
      </rect>
@@ -364,7 +364,7 @@
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>210</y>
+      <y>200</y>
       <width>121</width>
       <height>16</height>
      </rect>
@@ -477,7 +477,7 @@
      <string>Control Number</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="CtlNum_2">
+   <widget class="QLineEdit" name="CtlNum">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -509,6 +509,44 @@
     </property>
     <property name="text">
      <string>Set</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>250</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Fitting Method</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="FairLSPIAButton">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>340</y>
+      <width>89</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>FairLSPIA</string>
     </property>
    </widget>
   </widget>

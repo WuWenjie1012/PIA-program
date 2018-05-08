@@ -41,7 +41,8 @@ private:
 	enum IterateType
 	{
 		PIA,
-		LSPIA
+		LSPIA,
+		FairLSPIA
 	}IteType;
 
 	QString FilePathName;

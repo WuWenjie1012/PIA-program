@@ -10,8 +10,6 @@
 typedef Eigen::Vector3d Cpoint;
 using namespace std;
 
-extern int Method;
-
 class Bspline
 {
 public:

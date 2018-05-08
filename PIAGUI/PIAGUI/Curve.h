@@ -18,10 +18,10 @@ public:
 	vector<double> GetKnotVector() { return KnotVector; }
 	vector<double> GetDataParameter() { return DataParameters; }
 
-	vector<Cpoint> GetCtlPoints() { return CtlPoints; }
+	Eigen::MatrixXd GetCtlPoints() { return CtlPns; }
 	vector<Cpoint> GetDataPoints() { return DataPoints; }
 	vector<Cpoint> GetCurvePoints() { return PointsOnCurve; }
-	vector<Eigen::Vector3d> GetDifferenceVector() { return DifferenceVector; }
+	Eigen::MatrixXd GetDifferenceVector() { return Diff; }
 	vector<Cpoint> GetFirstDerivative() { return FirstDerivativeOnCurve; }
 	vector<double> GetCurvature() { return CurvatureOnCurve; }
 
@@ -40,7 +40,7 @@ public:
 	void SetDegree(const int &a) { Degree = a; }
 	void SetPosNum(const int &a) { PosNum = a; }
 	void SetKnotVector(const vector<double> &a) { KnotVector = a; }
-	void SetCtlPoints(const vector<Cpoint> &a) { CtlPoints = a; }
+	Eigen::MatrixXd SetCtlPoints(const Eigen::MatrixXd &a) { CtlPns = a; }
 	void SetDataPoints(const vector<Cpoint> &a) { DataPoints = a; }
 	void SetDataParameters(const vector<double> &a) { DataParameters = a; }
 	void SetCtlSequence(const vector<int> &a) { CtlSequence = a; }
@@ -62,27 +62,30 @@ public:
 	void CalculatePresentError();
 	void CalculateDifferenceVector();
 
-	void OnePIAIterateStep();
-
+	void OneIterateStep();
 	// Functions for first and second derivative
-	void CalculateQCtlPoints();
-	void CalculateRCtlPoints();
-	Eigen::Vector3d CalculateOneFirstDerivative(double u);
-	Eigen::Vector3d CalculateOneSecondDerivative(double u);
+	Eigen::MatrixXd CalculateQCtlPoints(Eigen::MatrixXd ctlpns, vector<double> knotvector, int degree);
+	Eigen::MatrixXd CalculateRCtlPoints(Eigen::MatrixXd ctlpns, vector<double> knotvector, int degree);
+	Eigen::Vector3d CalculateOneFirstDerivative(double u, Eigen::MatrixXd qctlpoints, vector<double> knotvector, int degree);
+	Eigen::Vector3d CalculateOneSecondDerivative(double u, Eigen::MatrixXd rctlpoints, vector<double> knotvector, int degree);
 	void CalculateFirstDerivativeOnCurve();
 	void CalculateSecondDerivativeOnCurve();
 	void CalculateCurvatureOnCurve();
 
 	void Init();	// Init for iteration
 
-	Eigen::MatrixXd CalculateConfigurationMatrixA();	
+	void CalculateConfigurationMatrixA();	
+	void CalculateMatrixD1();
+	void CalculateMatrixD2();
+	void CalculateMatrixMc();
+	void CalculateMatrixMe();
 
 private:
-	vector<Cpoint> CtlPoints;	// Control points for curve
-	vector<Cpoint> QCtlPoints;	// Control points for first derivative curve
-	vector<Cpoint> RCtlPoints;	// Control points for second derivative curve
+//	vector<Cpoint> CtlPoints;	// Control points for curve
+	Eigen::MatrixXd QCtlPoints;	// Control points for first derivative curve
+	Eigen::MatrixXd RCtlPoints;	// Control points for second derivative curve
 	vector<Cpoint> DataPoints;	// The data points
-	vector<Cpoint> DataPointsOnCurve;	// [t0, t1, t2, ... , tn] on curve
+	//vector<Cpoint> DataPointsOnCurve;	// [t0, t1, t2, ... , tn] on curve
 	vector<double> KnotVector;	// Knot vector for curve
 	vector<double> DataParameters;	// The data parameter
 
@@ -91,7 +94,7 @@ private:
 	vector<Cpoint> SecondDerivativeOnCurve;	// Second derivative
 
 	vector<int> CtlSequence;	// The contrl points sequence
-	vector<Eigen::Vector3d> DifferenceVector;	// The difference vector
+	//vector<Eigen::Vector3d> DifferenceVector;	// The difference vector
 	vector<Cpoint> PointsOnCurve;   //The points on the curve
 	vector<double> ParametersOnCurve;	// Parameters for points on curve
 	int DataNum;	// DataNum+1 is the number of data points(P0...Pn)
@@ -109,6 +112,14 @@ private:
 	Eigen::MatrixXd A;	// Configuration Matrix
 	Eigen::MatrixXd CtlPns;	// Control points
 	Eigen::MatrixXd DataPns;	// Data points
-	Eigen::MatrixXd Diff;	// Data points
+	Eigen::MatrixXd Diff;	// The difference vector
+	Eigen::MatrixXd miu;
 
+
+	Eigen::MatrixXd D1;	// P' = D1 * P
+	Eigen::MatrixXd D2;	// P'' = D2 * P
+	Eigen::MatrixXd Mc;	// Curvature matrix
+	Eigen::MatrixXd Me;	// Two order difference matrix of curvature 
+	Eigen::MatrixXd pCtlPos;	
+//	Eigen::MatrixXd 
 };

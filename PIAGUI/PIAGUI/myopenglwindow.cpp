@@ -62,16 +62,16 @@ void MyOpenGLWidget::paintGL()
 	glTranslatef(tanslate_x, tanslate_y, 0.0);
 	if (mCurve)
 	{
-		if (CtlPointOpen == true && mCurve->GetCtlPoints().size() != 0)
+		if (CtlPointOpen == true && mCurve->GetCtlPoints().rows() != 0)
 		{
-			vector<Cpoint> pt = mCurve->GetCtlPoints();
+			Eigen::MatrixXd pt = mCurve->GetCtlPoints();
 			glPointSize(4.0f);
 			glBegin(GL_POINTS);
 			glColor3d(1.0, 0.0, 0.0);
 			for (int i = 0; i < mCurve->GetCtlNum() + 1; i++)
 			{
 
-				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
+				glVertex3d(pt.row(i).x(), pt.row(i).y(), pt.row(i).z());
 
 			}
 			glEnd();
@@ -92,17 +92,17 @@ void MyOpenGLWidget::paintGL()
 			glEnd();
 		}
 		
-		if (CtlPolyOpen == true && mCurve->GetCtlPoints().size() != 0)
+		if (CtlPolyOpen == true && mCurve->GetCtlPoints().rows() != 0)
 		{
-			vector<Cpoint> pt = mCurve->GetCtlPoints();
+			Eigen::MatrixXd pt = mCurve->GetCtlPoints();
 			glLineWidth(1.0f);
 			glBegin(GL_LINES);
 			glColor3d(1.0, 0.0, 0.0);
 			for (int i = 0; i < mCurve->GetCtlNum(); i++)
 			{
 
-				glVertex3d(pt[i].x(), pt[i].y(), pt[i].z());
-				glVertex3d(pt[i + 1].x(), pt[i + 1].y(), pt[i + 1].z());
+				glVertex3d(pt.row(i).x(), pt.row(i).y(), pt.row(i).z());
+				glVertex3d(pt.row(i + 1).x(), pt.row(i + 1).y(), pt.row(i + 1).z());
 
 			}
 			glEnd();
